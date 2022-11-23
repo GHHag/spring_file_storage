@@ -1,9 +1,6 @@
 package spring_file_storage.demo;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,26 +19,26 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody HandleUser registerUser) {
+    public UserPayload register(@RequestBody RegisterUser registerUser) throws Exception {
         User user = this.userService.registerUser(
-                registerUser.getUsername(), registerUser.getPassword());
+                registerUser.getUsername(), registerUser.getPassword(), registerUser.isAdmin());
 
-        return ResponseEntity.ok(user);
+        return UserPayload.fromUser(user);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<Optional<User>> login(@RequestBody HandleUser loginUser) {
-        Optional<User> user = this.userService.loginUser(
-                loginUser.getUsername(), loginUser.getPassword());
+    // @PostMapping("/login")
+    // public UserPayload login(@RequestBody UserPayload loginUser) {
+    // var user = this.userService.loadUser(loginUser.getUsername());
 
-        return ResponseEntity.ok(user);
-    }
+    // return ResponseEntity.ok(user);
+    // }
 
     @Getter
     @Setter
-    public static class HandleUser {
+    public static class RegisterUser {
         private String username;
         private String password;
+        private boolean isAdmin;
     }
 
 }
