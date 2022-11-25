@@ -29,4 +29,11 @@ public class File {
     @ManyToOne
     private User user;
 
+    public File(String id, String name, String fileType, byte[] data) {
+        this.id = id;
+        this.name = name;
+        this.fileType = fileType;
+        this.data = data;
+    }
+
 }

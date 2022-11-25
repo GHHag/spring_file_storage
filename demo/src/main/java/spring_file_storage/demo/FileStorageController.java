@@ -4,13 +4,14 @@ import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import lombok.Getter;
-import lombok.Setter;
+import spring_file_storage.demo.security.UserObject;
 
 @RestController
 public class FileStorageController {
@@ -22,25 +23,15 @@ public class FileStorageController {
         this.fileStorageService = fileStorageService;
     }
 
-    @PostMapping("/upload")
-    public ResponseEntity<String> upload(@RequestBody UploadFile file) throws IOException {
-        System.out.println(file.getUser().getId());
-        System.out.println(file.getFile().getOriginalFilename());
-        this.fileStorageService.uploadFile(
-                // uploadFile.getName(),
-                // uploadFile.getFileType(),
-                // uploadFile.getData(),
-                // uploadFile.getUser();
-                file.getFile(), file.getUser());
+    @PostMapping("/upload") // ta emot path variabel för user ris hear?
+    // public ResponseEntity<String> upload(@RequestBody MultipartFile file,
+    // @PathVariable String userId)
+    public ResponseEntity<String> upload(@RequestBody MultipartFile file, @AuthenticationPrincipal UserObject user)
+            throws IOException {
+        // this.fileStorageService.uploadFile(file, userId);
+        this.fileStorageService.uploadFile(file, user);
 
-        return ResponseEntity.ok(file.getFile().getName());
-    }
-
-    @Getter
-    @Setter
-    public static class UploadFile {
-        private MultipartFile file;
-        private User user;
+        return ResponseEntity.ok(file.getName());
     }
 
 }

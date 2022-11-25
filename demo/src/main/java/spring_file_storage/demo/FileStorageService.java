@@ -8,23 +8,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import spring_file_storage.demo.security.UserObject;
+
 @Service
 public class FileStorageService {
 
     private final FileStorageRepository fileStorageRepository;
+    // private final UserRepository userRepository;
 
     @Autowired
-    public FileStorageService(FileStorageRepository fileStorageRepository) {
+    public FileStorageService(FileStorageRepository fileStorageRepository, UserRepository userRepository) {
         this.fileStorageRepository = fileStorageRepository;
+        // this.userRepository = userRepository;
     }
 
-    public void uploadFile(MultipartFile file, User user) throws IOException {
+    // public void uploadFile(MultipartFile file, String userId) throws IOException
+    // {
+    public void uploadFile(MultipartFile file, UserObject user) throws IOException {
+        // User user = this.userRepository.findById(userId).orElseThrow();
         String name = file.getOriginalFilename();
+        System.out.println(user.getUsername());
+        System.out.println(user.getAuthorities());
         File fileToUpload = new File(
                 UUID.randomUUID().toString(),
-                name, file.getContentType(),
+                name,
+                file.getContentType(),
                 file.getBytes(),
-                user);
+                user.getUser());
+        // UserPayload.fromUser(user.getUser()));
         this.fileStorageRepository.save(fileToUpload);
     }
 
