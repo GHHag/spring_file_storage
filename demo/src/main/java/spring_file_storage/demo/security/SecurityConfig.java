@@ -33,13 +33,10 @@ public class SecurityConfig {
                 .permitAll()
                 .antMatchers("/upload")
                 .authenticated()
-                // .antMatchers(HttpMethod.PUT, "/product/")
-                // .hasRole("ADMIN")
-                // .antMatchers(HttpMethod.DELETE, "/product/")
-                // .hasRole("ADMIN")
+                .antMatchers("/files/*")
+                .authenticated()
                 .anyRequest()
                 .permitAll()
-                // .authenticated()
                 .and()
                 .build();
     }
