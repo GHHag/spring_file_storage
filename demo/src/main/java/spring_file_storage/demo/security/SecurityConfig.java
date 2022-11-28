@@ -33,10 +33,11 @@ public class SecurityConfig {
                 .permitAll()
                 .antMatchers("/upload")
                 .authenticated()
-                // .antMatchers("/files/*")
-                // .authenticated()
+                .antMatchers("/files/*")
+                .authenticated()
                 .anyRequest()
-                .permitAll()
+                // .permitAll()
+                .authenticated()
                 .and()
                 .build();
     }

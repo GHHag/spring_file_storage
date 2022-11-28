@@ -60,16 +60,16 @@ public class FileController {
                 .body(file.getData());
     }
 
-    @DeleteMapping("/remove-file/{id}")
+    @DeleteMapping("files/remove/{id}")
     public ResponseEntity<String> removeFile(@AuthenticationPrincipal UserObject user, @PathVariable String id) {
         var userId = user.getUser().getId();
         var fileUser = this.fileService.getFileById(id).getUser().getId();
         if (userId.toString().equals(fileUser.toString())) {
             this.fileService.removeById(id);
 
-            return ResponseEntity.ok("great");
+            return ResponseEntity.ok("File deleted");
         } else {
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("kaos");
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("Failed to delete file");
         }
     }
 
