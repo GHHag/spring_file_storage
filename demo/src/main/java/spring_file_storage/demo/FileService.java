@@ -39,8 +39,8 @@ public class FileService {
         return this.fileRepository.findById(id).get();
     }
 
-    public void removeFile(String id) {
-        // this.fileRepository.delete(this.fileRepository.findById(id));
+    public void removeById(String id) {
+        this.fileRepository.deleteById(id);
     }
 
 }

@@ -56,13 +56,21 @@ public class FileController {
         File file = this.fileService.getFileById(id);
 
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename\"" + file.getName() + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
                 .body(file.getData());
     }
 
-    // @DeleteMapping("/remove-file")
-    // public ResponseEntity<> removeFile() {
+    @DeleteMapping("/remove-file/{id}")
+    public ResponseEntity<String> removeFile(@AuthenticationPrincipal UserObject user, @PathVariable String id) {
+        var userId = user.getUser().getId();
+        var fileUser = this.fileService.getFileById(id).getUser().getId();
+        if (userId.toString().equals(fileUser.toString())) {
+            this.fileService.removeById(id);
 
-    // }
+            return ResponseEntity.ok("great");
+        } else {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("kaos");
+        }
+    }
 
 }

@@ -20,8 +20,7 @@ public class UserController {
 
     @PostMapping("/register")
     public UserPayload register(@RequestBody RegisterUser registerUser) throws Exception {
-        User user = this.userService.registerUser(
-                registerUser.getUsername(), registerUser.getPassword(), registerUser.isAdmin());
+        User user = this.userService.registerUser(registerUser.getUsername(), registerUser.getPassword());
 
         return UserPayload.fromUser(user);
     }
@@ -31,7 +30,6 @@ public class UserController {
     public static class RegisterUser {
         private String username;
         private String password;
-        private boolean isAdmin;
     }
 
 }

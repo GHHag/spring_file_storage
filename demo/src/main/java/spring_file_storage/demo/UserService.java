@@ -24,13 +24,12 @@ public class UserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User registerUser(String username, String password, boolean admin) throws Exception {
+    public User registerUser(String username, String password) throws Exception {
         Optional<User> existingUser = this.userRepository.findByUsername(username);
         if (existingUser.isPresent()) {
             throw new Exception("User already exists");
         }
-
-        User user = new User(UUID.randomUUID(), username, this.passwordEncoder.encode(password), admin);
+        User user = new User(UUID.randomUUID(), username, this.passwordEncoder.encode(password));
 
         return this.userRepository.save(user);
     }
