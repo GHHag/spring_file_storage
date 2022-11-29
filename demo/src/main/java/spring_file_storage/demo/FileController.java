@@ -20,6 +20,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import spring_file_storage.demo.security.UserObject;
 
+/**
+ * File controller class that defines endpoints for managing files.
+ * 
+ * Author: Gustav Hagenblad, 2022
+ */
+
 @RestController
 public class FileController {
 
@@ -30,6 +36,13 @@ public class FileController {
         this.fileService = fileService;
     }
 
+    /**
+     * POST request endpoint for uploading a file.
+     * 
+     * @param file - An object of the MultipartFile class.
+     * @param user - AuthenticationPrincipal for the currently logged in user.
+     * @return - ResponseEntity containing a String.
+     */
     @PostMapping("/upload")
     public ResponseEntity<String> upload(@RequestBody MultipartFile file, @AuthenticationPrincipal UserObject user) {
         try {
@@ -40,6 +53,13 @@ public class FileController {
         }
     }
 
+    /**
+     * GET request endpoint for getting files related to a user.
+     * 
+     * @param user - AuthenticationPrincipal for the currently logged in user.
+     * @return - ResponseEntity with a List of the users' files represented as
+     *         ResponseFile objects.
+     */
     @GetMapping("/files")
     public ResponseEntity<List<ResponseFile>> getFiles(@AuthenticationPrincipal UserObject user) {
         List<ResponseFile> files = this.fileService.getFilesByUser(user).map(file -> {
@@ -51,20 +71,40 @@ public class FileController {
         return ResponseEntity.status(HttpStatus.OK).body(files);
     }
 
+    /**
+     * GET request endpoint for downloading a file.
+     * 
+     * @param user - AuthenticationPrincipal for the currently logged in user.
+     * @param id   - The id of the file to be downloaded.
+     * @return - An array of bytes containing the stored file.
+     */
     @GetMapping("/files/{id}")
-    public ResponseEntity<byte[]> downloadFile(@PathVariable String id) {
-        File file = this.fileService.getFileById(id);
+    public ResponseEntity<byte[]> downloadFile(@AuthenticationPrincipal UserObject user, @PathVariable String id) {
+        var userId = user.getUser().getId();
+        var fileOwner = this.fileService.getFileById(id).getUser().getId();
+        if (userId.toString().equals(fileOwner.toString())) {
+            File file = this.fileService.getFileById(id);
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
-                .body(file.getData());
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
+                    .body(file.getData());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
+    /**
+     * DELETE request endpoint for deleting a file.
+     * 
+     * @param user - AuthenticationPrincipal for the currently logged in user.
+     * @param id   - The id of the file to be deleted.
+     * @return - ResponseEntity containing a String.
+     */
     @DeleteMapping("files/remove/{id}")
     public ResponseEntity<String> removeFile(@AuthenticationPrincipal UserObject user, @PathVariable String id) {
         var userId = user.getUser().getId();
-        var fileUser = this.fileService.getFileById(id).getUser().getId();
-        if (userId.toString().equals(fileUser.toString())) {
+        var fileOwner = this.fileService.getFileById(id).getUser().getId();
+        if (userId.toString().equals(fileOwner.toString())) {
             this.fileService.removeById(id);
 
             return ResponseEntity.ok("File deleted");

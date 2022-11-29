@@ -10,6 +10,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * A class representing the file entity.
+ * 
+ * Author: Gustav Hagenblad, 2022
+ */
+
 @Entity
 @Getter
 @Setter

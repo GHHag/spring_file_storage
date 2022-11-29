@@ -10,10 +10,23 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import spring_file_storage.demo.UserService;
 
+/**
+ * A class containing security configurations.
+ */
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+    /**
+     * A Method that returns a SecurityFilterChain with security configurations.
+     * 
+     * @param http        - A HttpSecurity object
+     * @param userService - A UserService object
+     * @param authManager - An AuthenticationManager object
+     * @return - Returns a SecurityFilterChain.
+     * @throws Exception
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, UserService userService,
             AuthenticationManager authManager) throws Exception {

@@ -12,6 +12,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/**
+ * User service class that handles logic refering to users.
+ * 
+ * Author: Gustav Hagenblad, 2022
+ */
+
 @Service
 public class UserService implements UserDetailsService {
 
@@ -24,6 +30,14 @@ public class UserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Handles the registration of a user with the provided information.
+     * 
+     * @param username - A String with a username.
+     * @param password - A String with a password.
+     * @return - Returns the User object after inserting it to our database.
+     * @throws Exception
+     */
     public User registerUser(String username, String password) throws Exception {
         Optional<User> existingUser = this.userRepository.findByUsername(username);
         if (existingUser.isPresent()) {
@@ -34,6 +48,13 @@ public class UserService implements UserDetailsService {
         return this.userRepository.save(user);
     }
 
+    /**
+     * Attempts to find a user with the given username.
+     * 
+     * @param username - A String with the username of the user to be loaded.
+     * @return - Returns a UserObject with data for the user if found.
+     * @throws UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         var user = this.userRepository.findByUsername(username)

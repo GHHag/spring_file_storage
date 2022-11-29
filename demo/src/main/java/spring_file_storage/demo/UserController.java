@@ -8,6 +8,12 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * User controller class that defines endpoints for managing users.
+ * 
+ * Author: Gustav Hagenblad, 2022
+ */
+
 @RestController
 public class UserController {
 
@@ -18,6 +24,14 @@ public class UserController {
         this.userService = userService;
     }
 
+    /**
+     * POST request endpoint for registering a user.
+     * 
+     * @param registerUser - A request body containing the required fields for
+     *                     registering a user.
+     * @return - A UserPayload object made with data from the created user.
+     * @throws Exception
+     */
     @PostMapping("/register")
     public UserPayload register(@RequestBody RegisterUser registerUser) throws Exception {
         User user = this.userService.registerUser(registerUser.getUsername(), registerUser.getPassword());
@@ -25,6 +39,10 @@ public class UserController {
         return UserPayload.fromUser(user);
     }
 
+    /**
+     * Nested class used to represent the required body to be provided when
+     * registering a user.
+     */
     @Getter
     @Setter
     public static class RegisterUser {

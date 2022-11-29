@@ -10,6 +10,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * A class representing the user entity.
+ * 
+ * Author: Gustav Hagenblad, 2022
+ */
+
 @Entity(name = "app_users")
 @Getter
 @Setter

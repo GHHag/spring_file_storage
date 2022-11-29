@@ -9,6 +9,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.Getter;
 
+/**
+ * A class that implements the UserDetails class to provide user information.
+ * 
+ * Author: Gustav Hagenblad, 2022
+ */
+
 @Getter
 public class UserObject implements UserDetails {
 

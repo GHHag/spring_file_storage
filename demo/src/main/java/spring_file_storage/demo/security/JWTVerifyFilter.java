@@ -18,6 +18,11 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 import spring_file_storage.demo.UserService;
 
+/**
+ * A class containing functionality for handling authorization when making
+ * requests.
+ */
+
 public class JWTVerifyFilter extends OncePerRequestFilter {
 
     private final UserService userService;
@@ -26,6 +31,15 @@ public class JWTVerifyFilter extends OncePerRequestFilter {
         this.userService = userService;
     }
 
+    /**
+     * A method that runs requests and responses through the given FilterChain.
+     * 
+     * @param request  - The request to be handled.
+     * @param response - The response to be handled.
+     * @param chain    - A FilterChain with security configurations.
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
@@ -42,7 +56,7 @@ public class JWTVerifyFilter extends OncePerRequestFilter {
         }
 
         try {
-            var algo = Algorithm.HMAC256("test");
+            var algo = Algorithm.HMAC256("supersecret");
             var verifier = JWT.require(algo).withIssuer("auth0").build();
             DecodedJWT jwt = verifier.verify(jwtToken);
             var user = userService.loadUserByUsername(jwt.getSubject());

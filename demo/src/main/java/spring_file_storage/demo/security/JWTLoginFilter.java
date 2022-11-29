@@ -19,11 +19,25 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * A class that handles JWT authorization functionality. Extends the
+ * UsernamePasswordAuthenticationFilter class.
+ */
+
 @RequiredArgsConstructor
 public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
 
+    /**
+     * Handles authenticating login requests.
+     * 
+     * @param request  - The request to be handled.
+     * @param response
+     * @throws AuthenticationException
+     * @return - An Authentication object with the result of the authentication
+     *         process.
+     */
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
@@ -34,11 +48,21 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
         return this.authenticationManager.authenticate(authentication);
     }
 
+    /**
+     * Handles successful authentications, creates a JWT and adds it to the response
+     * headers.
+     * 
+     * @param request
+     * @param response   - The response to be handled.
+     * @param chain
+     * @param authResult - An Authentication object
+     * @throws AuthenticationException
+     */
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
             Authentication authResult) throws IOException, ServletException {
         try {
-            var algo = Algorithm.HMAC256("test");
+            var algo = Algorithm.HMAC256("supersecret");
             var token = JWT.create().withIssuer("auth0").withSubject(authResult.getName()).sign(algo);
             response.addHeader("Access-Control-Expose-Headers", "Authorization");
             response.addHeader("Authorization", "Bearer " + token);
