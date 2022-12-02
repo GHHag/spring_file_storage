@@ -1,6 +1,8 @@
 package spring_file_storage.demo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,13 +32,19 @@ public class UserController {
      * @param registerUser - A request body containing the required fields for
      *                     registering a user.
      * @return - A UserPayload object made with data from the created user.
-     * @throws Exception
      */
     @PostMapping("/register")
-    public UserPayload register(@RequestBody RegisterUser registerUser) throws Exception {
-        User user = this.userService.registerUser(registerUser.getUsername(), registerUser.getPassword());
+    public ResponseEntity<UserPayload> register(@RequestBody RegisterUser registerUser) {
+        if (registerUser.getUsername() == null || registerUser.getPassword() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
 
-        return UserPayload.fromUser(user);
+        try {
+            User user = this.userService.registerUser(registerUser.getUsername(), registerUser.getPassword());
+            return ResponseEntity.ok(UserPayload.fromUser(user));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
     }
 
     /**

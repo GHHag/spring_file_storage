@@ -2,6 +2,7 @@ package spring_file_storage.demo;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,10 @@ public class FileController {
      */
     @PostMapping("/upload")
     public ResponseEntity<String> upload(@RequestBody MultipartFile file, @AuthenticationPrincipal UserObject user) {
+        if (file == null || file.getSize() == 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
         try {
             this.fileService.uploadFile(file, user);
             return ResponseEntity.status(HttpStatus.OK).build();
@@ -81,13 +86,17 @@ public class FileController {
     @GetMapping("/files/{id}")
     public ResponseEntity<byte[]> downloadFile(@AuthenticationPrincipal UserObject user, @PathVariable String id) {
         var userId = user.getUser().getId();
-        var fileOwner = this.fileService.getFileById(id).getUser().getId();
-        if (userId.toString().equals(fileOwner.toString())) {
-            File file = this.fileService.getFileById(id);
 
+        Optional<File> file = this.fileService.getFileById(id);
+        if (!file.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        var fileOwner = this.fileService.getFileById(id).get().getUser().getId();
+        if (userId.toString().equals(fileOwner.toString())) {
             return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getName() + "\"")
-                    .body(file.getData());
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.get().getName() + "\"")
+                    .body(file.get().getData());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
@@ -103,7 +112,13 @@ public class FileController {
     @DeleteMapping("files/remove/{id}")
     public ResponseEntity<String> removeFile(@AuthenticationPrincipal UserObject user, @PathVariable String id) {
         var userId = user.getUser().getId();
-        var fileOwner = this.fileService.getFileById(id).getUser().getId();
+
+        Optional<File> file = this.fileService.getFileById(id);
+        if (!file.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        var fileOwner = this.fileService.getFileById(id).get().getUser().getId();
         if (userId.toString().equals(fileOwner.toString())) {
             this.fileService.removeById(id);
 

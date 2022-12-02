@@ -1,6 +1,7 @@
 package spring_file_storage.demo;
 
 import java.io.IOException;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -60,8 +61,10 @@ public class FileService {
      * @param id - A String with the id of the file to find.
      * @return - Returns a File object.
      */
-    public File getFileById(String id) {
-        return this.fileRepository.findById(id).get();
+    public Optional<File> getFileById(String id) {
+        Optional<File> file = this.fileRepository.findById(id);
+
+        return file;
     }
 
     /**
