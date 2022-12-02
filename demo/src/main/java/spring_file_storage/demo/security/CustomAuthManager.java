@@ -13,7 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 /**
- * 
+ * A class that is injected with object instances needed to handle the
+ * applications authentication. Extends the AuthenticationManager class.
  */
 
 @Component
@@ -28,6 +29,13 @@ public class CustomAuthManager implements AuthenticationManager {
         this.userService = userService;
     }
 
+    /**
+     * Passes the value returned by the 'getName' method from the given
+     * Authentication parameter to the UserServices' loadUserByUsername method and
+     * assigns it to a UserDetails variable. Then attempts to authenticate the user
+     * by passing the given credentials of the authentication parameter to the
+     * PasswordEncoder members' encode method.
+     */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         final UserDetails userDetail = this.userService.loadUserByUsername(authentication.getName());

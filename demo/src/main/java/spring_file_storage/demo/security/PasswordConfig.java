@@ -13,7 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class PasswordConfig {
 
     /**
-     * A Method that returns a PasswordEncoder.
+     * A @Bean annotated Method that returns an instance of the
+     * BCryptPasswordEncoder class to be used to encrypt passwords.
      * 
      * @return - A PasswordEncoder object.
      */

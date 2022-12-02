@@ -19,7 +19,8 @@ import spring_file_storage.demo.UserService;
 public class SecurityConfig {
 
     /**
-     * A Method that returns a SecurityFilterChain with security configurations.
+     * Sets and returns a SecurityFilterChain with security configurations such
+     * as cors, csrf, JWT filter functionality, endpoint permissions etc.
      * 
      * @param http        - A HttpSecurity object
      * @param userService - A UserService object
@@ -49,7 +50,6 @@ public class SecurityConfig {
                 .antMatchers("/files/*")
                 .authenticated()
                 .anyRequest()
-                // .permitAll()
                 .authenticated()
                 .and()
                 .build();

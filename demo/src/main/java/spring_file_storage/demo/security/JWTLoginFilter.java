@@ -20,8 +20,8 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import lombok.RequiredArgsConstructor;
 
 /**
- * A class that handles JWT authorization functionality. Extends the
- * UsernamePasswordAuthenticationFilter class.
+ * A class that handles JWT authorization functionality for user log ins.
+ * Extends the UsernamePasswordAuthenticationFilter class.
  */
 
 @RequiredArgsConstructor
@@ -30,9 +30,13 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
 
     /**
-     * Handles authenticating login requests.
+     * Handles authenticating login requests. Generates a
+     * UsernamePasswordAuthenticationToken, passes it to the AuthenticationManagers
+     * authenticate method and returns a new Authentication object populated with
+     * relevant headers.
      * 
-     * @param request  - The request to be handled.
+     * @param request  - The request to be handled. Expects headers with values
+     *                 corresponding to the keys 'username' and 'password'.
      * @param response
      * @throws AuthenticationException
      * @return - An Authentication object with the result of the authentication

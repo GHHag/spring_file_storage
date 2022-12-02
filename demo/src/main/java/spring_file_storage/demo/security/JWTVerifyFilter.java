@@ -20,7 +20,9 @@ import spring_file_storage.demo.UserService;
 
 /**
  * A class containing functionality for handling authorization when making
- * requests.
+ * requests. Authorization is implemented using json web tokens. Extends the
+ * class OncePerRequestFilter which provides functionality to run requests to
+ * provided filters.
  */
 
 public class JWTVerifyFilter extends OncePerRequestFilter {
@@ -32,9 +34,13 @@ public class JWTVerifyFilter extends OncePerRequestFilter {
     }
 
     /**
-     * A method that runs requests and responses through the given FilterChain.
+     * Runs requests and responses through the given FilterChain by calling its
+     * 'doFilter' method and passing in the provided request and response
+     * parameters. Then verifies and decodes the JWT token provided in the
+     * "Authorization" header and handles the data from its subject.
      * 
-     * @param request  - The request to be handled.
+     * @param request  - The request to be handled. Expected to contain a header
+     *                 called "Authorization".
      * @param response - The response to be handled.
      * @param chain    - A FilterChain with security configurations.
      * @throws ServletException

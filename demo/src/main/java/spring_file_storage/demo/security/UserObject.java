@@ -11,8 +11,6 @@ import lombok.Getter;
 
 /**
  * A class that implements the UserDetails class to provide user information.
- * 
- * Author: Gustav Hagenblad, 2022
  */
 
 @Getter
