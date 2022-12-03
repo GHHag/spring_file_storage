@@ -28,7 +28,9 @@ public class FileService {
     }
 
     /**
-     * Handles the uploading of a file.
+     * Handles the uploading of a file by creating a new object of the File class
+     * with data provided from a MultipartFile object and a UserObject object
+     * parameters.
      * 
      * @param file - A MultipartFile object, the file to be stored.
      * @param user - A UserObject with the user uploading the file.

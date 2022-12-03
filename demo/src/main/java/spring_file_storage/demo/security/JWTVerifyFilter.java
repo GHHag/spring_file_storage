@@ -35,7 +35,7 @@ public class JWTVerifyFilter extends OncePerRequestFilter {
 
     /**
      * Runs requests and responses through the given FilterChain by calling its
-     * 'doFilter' method and passing in the provided request and response
+     * doFilter method and passing in the provided request and response
      * parameters. Then verifies and decodes the JWT token provided in the
      * "Authorization" header and handles the data from its subject.
      * 
